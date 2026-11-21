@@ -102,8 +102,8 @@ Los endpoints están bajo `/api/v1`. Las categorías, productos y pedidos usan S
 - RN-06: `PedidoCreate` valida forma de pago y longitud de dirección.
 
 ## URL del repositorio
+https://github.com/FlorenciaEyoBartl/TPI_P4.git
 
 ## Link al video 
-
 https://drive.google.com/file/d/1u9aKEuuW-CMFKBk-neYw2fYZGhTew9fK/view?usp=sharing
 
