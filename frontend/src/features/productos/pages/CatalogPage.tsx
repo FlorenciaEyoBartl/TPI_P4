@@ -1,0 +1,12 @@
+import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { api } from '../../../shared/api/axiosInstance'
+import type { ProductsPage } from '../types'
+import { useCartStore } from '../../../store/cartStore'
+import { Button } from '../../../shared/ui/Button'
+import { Card } from '../../../shared/ui/Card'
+import { Paginacion } from '../../../shared/components/Paginacion'
+import { Skeleton } from '../../../shared/components/Skeleton'
+import { EstadoVacio } from '../../../shared/components/EstadoVacio'
+import { Input } from '../../../shared/ui/Input'
+export function CatalogPage() { const [page, setPage] = useState(0); const [search, setSearch] = useState(''); const [category, setCategory] = useState(''); const add = useCartStore((s) => s.agregar); const query = useQuery({ queryKey: ['productos', { page, search, category }], queryFn: async () => (await api.get<ProductsPage>('/productos', { params: { skip: page * 12, limit: 12, search: search || undefined, categoria_id: category || undefined } })).data }); const categories = useQuery({ queryKey: ['categorias'], queryFn: async () => (await api.get<Array<{ id: number; nombre: string }>>('/categorias')).data }); return <><h1>Menú</h1><div className="filters"><Input placeholder="Buscar productos" value={search} onChange={(e) => { setSearch(e.target.value); setPage(0) }} /><select value={category} onChange={(e) => { setCategory(e.target.value); setPage(0) }}><option value="">Todas las categorías</option>{categories.data?.map((c) => <option key={c.id} value={c.id}>{c.nombre}</option>)}</select></div>{query.isLoading ? <Skeleton /> : query.data?.items.length ? <div className="grid">{query.data.items.map((p) => <Card key={p.id}><h2>{p.nombre}</h2><p>{p.descripcion}</p><small>{p.categoria.nombre} · Stock {p.stock}</small><h3>${p.precio_base.toLocaleString('es-AR')}</h3><Button disabled={!p.disponible || p.stock < 1} onClick={() => add(p)}>Agregar al carrito</Button></Card>)}</div> : <EstadoVacio texto="No hay productos para mostrar." />}<Paginacion page={page} pages={Math.ceil((query.data?.total ?? 0) / 12)} onPage={setPage} /></> }

@@ -1,0 +1,4 @@
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuthStore } from '../../store/authStore'
+import { useCartStore } from '../../store/cartStore'
+export function Navbar() { const user = useAuthStore((s) => s.usuario); const logout = useAuthStore((s) => s.logout); const count = useCartStore((s) => s.items.length); const navigate = useNavigate(); return <nav className="nav"><Link to="/">🍔 Food Store</Link><div><Link to="/carrito">Carrito ({count})</Link>{user ? <><Link to="/mis-pedidos">Mis pedidos</Link>{user.role === 'admin' && <><Link to="/admin/resumen">Resumen</Link><Link to="/admin/categorias">Categorías</Link><Link to="/admin/productos">Productos</Link><Link to="/admin/pedidos">Pedidos</Link><Link to="/admin/usuarios">Usuarios</Link></>}<button onClick={() => void logout().then(() => navigate('/login'))}>Salir</button></> : <><Link to="/login">Ingresar</Link><Link to="/register">Crear cuenta</Link></>}</div></nav> }

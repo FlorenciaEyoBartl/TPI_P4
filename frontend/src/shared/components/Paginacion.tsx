@@ -1,0 +1,2 @@
+import { Button } from '../ui/Button'
+export function Paginacion({ page, pages, onPage }: { page: number; pages: number; onPage: (value: number) => void }) { return <div className="row"><Button disabled={page <= 0} onClick={() => onPage(page - 1)}>Anterior</Button><span>Página {page + 1} de {Math.max(1, pages)}</span><Button disabled={page + 1 >= pages} onClick={() => onPage(page + 1)}>Siguiente</Button></div> }
